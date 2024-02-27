@@ -1,0 +1,328 @@
+@extends('admin.share.master')
+@section('noi_dung')
+    <div class="container">
+        <div class="row" id="app">
+            <div class="pagetitle">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
+                        <li class="breadcrumb-item active">Khu Vực</li>
+                    </ol>
+                </nav>
+              </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">Danh Sách Khu Vực</h5>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#themmoikhuvuc"><i class="fa-solid fa-plus"></i> Thêm Mới</button>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="table table-bordered border-primary">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Tên Khu</th>
+                                    <th class="text-center">Slug Khu</th>
+                                    <th class="text-center">Tình Trạng</th>
+                                    <th class="text-center">action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template v-for="(value, key) in data">
+                                    <tr>
+                                        <th class=" align-middle text-center"></th>
+                                        <td class=" align-middle text-center"></td>
+                                        <td class=" align-middle text-center"></td>
+                                        <td class=" align-middle text-center">
+                                            <i  class="fa-solid fa-eye-slash maudo" v-if="value.tinh_trang_kv == 0" style="font-size: 20px;"></i>
+                                            <i  class="fa-solid fa-eye mauxanh" v-else style="font-size: 20px;"></i>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <i data-bs-toggle="modal" data-bs-target="#capnhapModal" class="fa-solid fa-pen-to-square mauxanh" style="font-size: 1.2em;"></i>
+                                            <i data-bs-toggle="modal" data-bs-target="#deleteModal" class="fa-solid fa-trash maudo" style="font-size: 1.2em;"></i> </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@section('js')
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                data: [],
+
+            },
+            created() {
+                ;
+            },
+            methods: {
+
+
+
+
+            }
+        });
+    </script>
+@endsection
+
+
+
+
+@extends('Admin.Share.Master')
+@section('noi_dung')
+
+@endsection
+@section('js')
+    <script>
+        $(document).ready(function() {
+            new Vue({
+                el: '#app',
+                data: {
+
+                },
+
+                created() {
+                    this.loadData();
+                },
+
+                methods: {
+
+                    loadData() {
+                        axios
+                            .get('/admin/menu/data')
+                            .then((res) => {
+                                this.data = res.data.data;
+                            });
+                    },
+                }
+            });
+        });
+    </script>
+@endsection
+
+
+
+@extends('admin.share.master')
+@section('noi_dung')
+    <div class="container">
+        <div class="row" id="app">
+            <div class="col-3 mt-4">
+                <div class="card border-primary border-bottom border-3 border-0" style="background: rgb(209, 205, 205)">
+                    <div class="card-header">
+                        <b>Tạo Tài Khoản</b>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Họ Và Tên</label>
+                            <input v-model="add.ho_va_ten" type="text" class="form-control" placeholder="Nhập vào họ và tên *">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input v-model="add.email" type="email" class="form-control" placeholder="Nhập vào email *">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số Điện Thoại</label>
+                            <input v-model="add.so_dien_thoai" type="tel" class="form-control" placeholder="Nhập vào số điện thoại *">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ngày Sinh</label>
+                            <input v-model="add.ngay_sinh" type="date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mật Khẩu</label>
+                            <input v-model="add.password" type="password" class="form-control" placeholder="Nhập vào mật khẩu *">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Xác Nhận Mật Khẩu</label>
+                            <input v-model="add.kt_mat_khau" type="password" class="form-control" placeholder="Nhập lại mật khẩu *">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Quyền Tài Khoản</label>
+                            <select v-model="add.id_quyen" class="form-control">
+                                <option value="0">vui lòng chọn quyền</option>
+                                @foreach ($quyen as $key => $value)
+                                    <option value="{{$value->id}}">{{$value->ten_quyen}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <button v-on:click="taotaikhoan()" class="btn btn-primary" type="button" >Tạo Mới</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9 mt-4">
+                <div class="card border-primary border-bottom border-3 border-0">
+                    <div class="card-header">
+
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">#</th>
+                                        <th class="text-center align-middle">Họ Và Tên</th>
+                                        <th class="text-center align-middle">Gmail</th>
+                                        <th class="text-center align-middle">Số Điện Thoại</th>
+                                        <th class="text-center align-middle">Ngày Sinh</th>
+                                        <th class="text-center align-middle">Quyền Tài Khoản</th>
+                                        <th class="text-center align-middle">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th class="align-middle">ạdhasdgahsdg</th>
+                                        <td class="align-middle">2</td>
+                                        <td class="align-middle">3</td>
+                                        <th class="align-middle">ạdhasdgahsdg</th>
+                                        <td class="align-middle">2</td>
+                                        <td class="align-middle">3</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+@endsection
+@section('js')
+    <script>
+        $(document).ready(function() {
+            new Vue({
+                el: '#app',
+                data: {
+                    data:[],
+                    add:{}
+                },
+
+                created() {
+                    this.loadData();
+                },
+
+                methods: {
+
+                    loadData() {
+                        axios
+                            .get('/admin/tai-khoan/data')
+                            .then((res) => {
+                                this.data = res.data.data;
+                            });
+                    },
+                    date_format(now) {
+                        return moment(now).format('DD/MM/yyyy');
+                    },
+
+
+                }
+            });
+        });
+    </script>
+@endsection
+
+
+
+
+<!-- Cấu trúc -->
+<div class="row">
+    <div class="col-4">
+
+    </div>
+    <div class="col-8">
+
+    </div>
+</div>
+
+<!-- Card -->
+<div class="card border-primary border-bottom border-3 border-0">
+    <div class="card-header">
+        <b></b>
+    </div>
+    <div class="card-body">
+
+    </div>
+    <div class="card-footer text-end">
+
+    </div>
+</div>
+
+<!-- Input -->
+<div class="mb-3">
+    <label class="form-label"></label>
+    <input type="text" class="form-control">
+</div>
+
+<!-- Table -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-center"></th>
+            <th class="text-center"></th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th class="text-center align-middle"></th>
+            <td class="align-middle"></td>
+            <td class="align-middle"></td>
+        </tr>
+    </tbody>
+</table>
+
+axios
+    .post('', payload)
+    .then((res) => {
+        if (res.data.status == 1) {
+            toastr.success(res.data.message, "Success");
+            loadData();
+        } else if (res.data.status == 0) {
+            toastr.error(res.data.message, "Error");
+        } else if (res.data.status == 2) {
+            toastr.warning(res.data.message, "Warning");
+        }
+    });
+
+
+<!-- Button trigger modal -->
+data-bs-toggle="modal" data-bs-target="#exampleModal"
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        ...
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+    </div>
+    </div>
+</div>
+</div>
+
+
+<div class="alert alert-primary" role="alert">
+    A simple primary alert—check it out!
+  </div>
